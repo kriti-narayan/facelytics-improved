@@ -3,27 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Facial Recognition</title>
+  <title>AI Vision | Facial Recognition</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
   <div class="wrapper">
     <div class="glass-card">
-      <h1>🧠 Facial Recognition</h1>
-      <p class="subheading">AI-powered recognition using Python & Eel</p>
+      <div class="app-header">
+        <i class="fas fa-robot logo-icon"></i>
+        <div>
+          <h1>AI Vision Recognition</h1>
+          <p class="subheading">Real-time facial analysis powered by Python & Eel</p>
+        </div>
+      </div>
 
       <div class="video-container">
+        <div class="video-overlay">
+          <span class="pulse-circle"></span>
+          <span class="scanning-line"></span>
+        </div>
         <video id="webcam" autoplay muted playsinline></video>
         <canvas id="snapshot" style="display: none;"></canvas>
       </div>
 
       <div class="button-group">
-        <button class="btn start" onclick="startRecognition()">Start</button>
-        <button class="btn stop" onclick="stopRecognition()">Stop</button>
+        <button class="btn start" onclick="startRecognition()">
+          <i class="fas fa-play"></i> Start Recognition
+        </button>
+        <button class="btn stop" onclick="stopRecognition()">
+          <i class="fas fa-stop"></i> Stop
+        </button>
       </div>
 
-      <p id="status" class="status-text">Status: Waiting to start</p>
-      <p id="result" class="result-text"></p>
+      <div class="status-container">
+        <div class="status-indicator" id="status-indicator"></div>
+        <p id="status" class="status-text">System ready</p>
+      </div>
+      
+      <div class="result-card" id="result-card">
+        <div class="result-header">
+          <i class="fas fa-id-card"></i>
+          <h3>Detection Results</h3>
+        </div>
+        <p id="result" class="result-text">No faces detected</p>
+      </div>
     </div>
   </div>
 
