@@ -1,36 +1,29 @@
 import eel
 import cv2
-import face_recognition
+import numpy as np
+import base64
 
 eel.init('web')
 
-running = False
-
 @eel.expose
-def start_facial_recognition():
-    global running
-    running = True
-    video_capture = cv2.VideoCapture(0)
+def detect_face_from_image(image_data_url):
+    try:
+        # Extract base64 data from "data:image/jpeg;base64,..."
+        header, encoded = image_data_url.split(',', 1)
+        image_bytes = base64.b64decode(encoded)
 
-    while running:
-        ret, frame = video_capture.read()
-        if not ret:
-            break
+        # Convert bytes to NumPy array
+        nparr = np.frombuffer(image_bytes, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        face_locations = face_recognition.face_locations(frame)
-        for (top, right, bottom, left) in face_locations:
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+        # Convert to grayscale and detect face
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
 
-        cv2.imshow("Facial Recognition", frame)
-        if cv2.waitKey(1) == 27:  # ESC key
-            break
+        return "✅ Face detected!" if len(faces) > 0 else "❌ No face found."
 
-    video_capture.release()
-    cv2.destroyAllWindows()
+    except Exception as e:
+        return f"❌ Error: {str(e)}"
 
-@eel.expose
-def stop_facial_recognition():
-    global running
-    running = False
-
-eel.start('index.html', size=(500, 500))
+eel.start('index.html', size=(600, 700))
